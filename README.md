@@ -8,8 +8,8 @@ It’s designed as a personal toolbox — combining small automation scripts, AP
 
 🚀 Features
 	•	🏠 Main Menu — easy text-based interface built with pyfiglet.
-	•	🌦 Weather Info — fetches real-time weather data for any city using the OpenWeather API￼.
-	•	📚 Edubase Downloader — integrates the edubase-downloader￼ as a Git submodule.
+	•	🌦 Weather Info — fetches real-time weather data for any city using the OpenWeather API.
+	•	📚 Edubase Downloader — integrates the edubase-downloader as a Git submodule.
 	•	💾 Auto Installer — the setup_and_run.py script automatically installs all dependencies globally and runs the program.
 	•	⚙️ Expandable Structure — clean folder layout for adding more tools (e.g., 01_Allgemein, 03_weather, etc.).
 
