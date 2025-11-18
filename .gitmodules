@@ -1,0 +1,6 @@
+[submodule "public-apis"]
+	path = 01_api_infos
+	url = https://github.com/public-apis/public-apis
+[submodule "02_Edubase"]
+	path = 02_Edubase
+	url = https://github.com/rtfmkiesel/edubase-downloader.git
