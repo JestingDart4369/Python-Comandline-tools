@@ -23,7 +23,7 @@ def install_requirements():
 def run_password_setup_if_needed():
     """Run 06_Passwords/setup.py only if key.key doesn't exist."""
     key_file = os.path.join(BASE_DIR, "key.key")
-    setup_script = os.path.join(BASE_DIR, "06_Passwords", "setup.py")
+    setup_script = os.path.join(BASE_DIR, "06_Passwords", "03_setup.py")
 
     if not os.path.exists(key_file):
         if os.path.exists(setup_script):
