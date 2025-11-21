@@ -6,9 +6,9 @@ print(pyfiglet.figlet_format('Menu'))
 
 def load_key():
     file = open("key.key", "rb")
-    key = file.read()
+    key_load = file.read()
     file.close()
-    return key
+    return key_load
 
 
 key = load_key()
@@ -24,7 +24,7 @@ def read():
     with open("02_Password_collection", "r") as f:
         for line in f.readlines():
             data = line.rstrip()
-            user, pwd = line.split("|")
+            user, pwd = data.split("|")
             print(f"{fer.decrypt(user.encode()).decode()}|{fer.decrypt(pwd.encode()).decode()}\n")
     whenTruthy(input("Press enter to continue... "))
 while True:

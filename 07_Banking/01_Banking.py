@@ -3,17 +3,17 @@ import os
 import inquirer
 import pyfiglet
 kontoauszug_file = ""
+os.makedirs("./02_Bankauszüge", exist_ok=True)
 def kontoauszug_laden():
     #Loads a Kontoauszug
     #Cantonal Bank Csv
-        #buchung        |0
-        #valuta         |1
-        #Buchungstext   |2
-        #belastung      |3
-        #Gutschrift     |4
-        #saldo          |5
+        #0|buchung
+        #1|valuta
+        #2|Buchungstext
+        #3|belastung
+        #4|Gutschrift
+        #5|saldo
     base_dir = "./02_Bankauszüge"
-    gesamt_ausgaben = 0.0
     kontoauszug = inquirer.list_input(
         "Bitte wählen Sie ein Kontoauszug aus:",
         choices=os.listdir(base_dir))

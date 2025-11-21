@@ -6,7 +6,7 @@ from apikey import *
 import time
 from yaspin import yaspin
 #Settings
-Toggle_Coments = 0
+Toggle_Comments = 0
 units = "metric"
 
 #Self configuration
@@ -45,7 +45,7 @@ Weather_icons_lib = {
 }
 
 #construct Geolocation api call
-if Toggle_Coments == 1 :
+if Toggle_Comments == 1 :
     print("Constructing Geolocation Api Call")
 parser = argparse.ArgumentParser(description='Check the weather for a certain Country/city')
 parser.add_argument("Location", help="The Place to check")
@@ -57,44 +57,44 @@ headers = {
 }
 
 #makeing geo Api Call
-if Toggle_Coments == 1 :
+if Toggle_Comments == 1 :
     print("Sending Geolocation Api Call")
 response_geo = requests.get(url_geo, headers=headers)
 if response_geo.status_code != 200:
-    print(chalk.red("Error: Unable to retrive Coordinates information"))
+    print(chalk.red("Error: Unable to retrieve Coordinates information"))
     exit()
 
 #Converting longitude and latitude
 data_geo = response_geo.json()
 longitude = data_geo["features"][0]["properties"]["lon"]
 latitude = data_geo["features"][0]["properties"]["lat"]
-if Toggle_Coments == 1 :
+if Toggle_Comments == 1 :
     print(longitude,latitude)
 
 #Constructing whether api call
-if Toggle_Coments == 1 :
-    print("Constructing wheather api call")
-url_wheather= f"{default_url_weather}/data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key_weather}&units={units}"
+if Toggle_Comments == 1 :
+    print("Constructing weather api call")
+url_weather= f"{default_url_weather}/data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key_weather}&units={units}"
 headers = {
     "accept": "application/json",
     "accept-encoding": "deflate, gzip, br"
 }
 #Making Weather api call
-if Toggle_Coments == 1 :
-    print("Sending wheather api call")
-response_wheater = requests.get(url_wheather, headers=headers)
-if response_wheater.status_code != 200:
-    print(chalk.red("Error: Unable to retrive weather information"))
+if Toggle_Comments == 1 :
+    print("Sending weather api call")
+response_weather = requests.get(url_weather, headers=headers)
+if response_weather.status_code != 200:
+    print(chalk.red("Error: Unable to retrieve weather information"))
     exit()
 #parsing to json
-data_weather = response_wheater.json()
+data_weather = response_weather.json()
 
-#Converting to output"
+#Converting to output
 icon = data_weather["weather"][0]["icon"]
 weather_icon = Weather_icons_lib.get(icon, "")
-discription = data_weather["weather"][0]["description"]
+description = data_weather["weather"][0]["description"]
 country = data_weather["sys"]["country"]
-tempature = data_weather["main"]["temp"]
+temperature = data_weather["main"]["temp"]
 feels_like = data_weather["main"]["feels_like"]
 wind_speed = data_weather["wind"]["speed"]
 wind_gust = data_weather["wind"].get("gust", "N/A")
@@ -103,8 +103,8 @@ spinner.ok()
 output = f"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 output += f"{pyfiglet.figlet_format(args.Location)}"
 output += f"({country}) Lat: {latitude} Lon: {longitude}\n\n"
-output += f"{weather_icon}  {discription}\n"
-output += f"Temperature: {tempature}°C\n"
+output += f"{weather_icon}  {description}\n"
+output += f"Temperature: {temperature}°C\n"
 output += f"Feels Like: {feels_like}°C\n"
 output += f"Wind Speed: {wind_speed} km/h\n"
 output += f"Wind Gust: {wind_gust} km/h"
