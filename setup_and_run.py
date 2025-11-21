@@ -19,6 +19,15 @@ def install_requirements():
         print("✅ All required packages are installed.\n")
     else:
         print("⚠️  No requirements.txt found — skipping package installation.\n")
+    """Install dependencies from requirements.txt globally."""
+    req_file = os.path.join(BASE_DIR, "08_Quiz/Program/requirements.txt")
+    if os.path.exists(req_file):
+            print("📦 Installing required packages globally...")
+            run([sys.executable, "-m", "pip", "install", "--upgrade", "pip"], cwd=BASE_DIR)
+            run([sys.executable, "-m", "pip", "install", "-r", req_file], cwd=BASE_DIR)
+            print("✅ All required packages are installed.\n")
+    else:
+            print("⚠️  No requirements.txt found — skipping package installation.\n")
 
 def run_password_setup_if_needed():
     """Run 06_Passwords/setup.py only if key.key doesn't exist."""

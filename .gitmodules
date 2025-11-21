@@ -4,3 +4,6 @@
 [submodule "02_Edubase"]
 	path = 02_Edubase
 	url = https://github.com/rtfmkiesel/edubase-downloader.git
+[submodule "08_Quiz"]
+	path = 08_Quiz
+	url = https://github.com/C-Kaenel/Franzoesisch-Quiz.git

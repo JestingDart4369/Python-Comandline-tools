@@ -18,6 +18,7 @@ while not exit_Button:
         "05|Mailing",
         "06|Passwords",
         "07|Banking",
+        "08|Quiz",
         "10|Exit"])
 
     #trigger For programs
@@ -44,6 +45,10 @@ while not exit_Button:
 
     if choice == "07|Banking":
         subprocess.run(["python","01_Banking.py"], cwd="07_Banking")
+
+    if choice == "08|Quiz":
+        subprocess.run(["python","main.py"], cwd="08_Quiz/Program")
+
     if choice == "10|Exit":
         exit_Button = True
 print(f"Bye bye👋")
