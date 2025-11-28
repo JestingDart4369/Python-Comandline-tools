@@ -3,7 +3,18 @@ from datetime import datetime
 from simple_chalk import chalk
 import requests
 import pyfiglet
-from apikey import *
+import sys
+import os
+
+# Go to the project root folder
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(project_root)
+
+# Now import from /requirements
+from requirements import apikeys
+
+api_key_geo = apikeys.api_key_geo
+api_key_weather = apikeys.api_key_weather
 #Settings
 Toggle_Comments = 0
 units = "metric"

@@ -1,6 +1,24 @@
+import os
 import subprocess
 import pyfiglet
-from Edubase_Login import *
+current_directory = os.getcwd()
+if not os.path.exists(os.path.join(current_directory,"requirements","apikeys.py")):
+    print("ApiKeys Missing")
+    apikey_mail = input("Enter Mail Bearer token from Resend: ")
+    email = input("Enter Email Address to send Mail from Resend: ")
+    api_key_geo = input("Enter Geolocation API Key from Geoapify: ")
+    api_key_weather = input("Enter Weather API Key: from OpenWeatherMap: ")
+    edubase_username = input("Enter Edubase Username: ")
+    edubase_password = input("Enter Edubase Password: ")
+    requ = (f"apikey_mail = '{apikey_mail}'\n"
+            f"email= '{email}'\n"
+            f"api_key_geo = '{api_key_geo}'\n"
+            f"api_key_weather = '{api_key_weather}'\n"
+            f"edubase_username = '{edubase_username}'\n"
+            f"edubase_password = '{edubase_password}'")
+    with open(os.path.join(current_directory,"requirements","apikeys.py"),"x") as i:
+        i.write(requ)
+from requirements import apikeys
 import inquirer
 exit_Button = False
 choice = 0
@@ -11,7 +29,7 @@ while not exit_Button:
 
     #Building Menu
     choice = inquirer.list_input(message=f'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n{pyfiglet.figlet_format('Menu')}\n\n', choices=[
-        "01|Infos",
+        "01|Setup",
         "02|Edubase-Downloader",
         "03|Weather-Info",
         "04|Weather-Forcast",
@@ -19,11 +37,16 @@ while not exit_Button:
         "06|Passwords",
         "07|Banking",
         "08|Quiz",
+        "09|Sort Downloads Folder",
         "10|Exit"])
 
     #trigger For programs
+    if choice == "01|Setup":
+        open()
+        input("\nPress ENTER to return to the menu...")
+
     if choice == "02|Edubase-Downloader":
-        subprocess.run(["python","edubasedl.py","-u",edubase_username,"-p",edubase_password] ,cwd="02_Edubase")
+        subprocess.run(["python","edubasedl.py","-u", apikeys.edubase_username, "-p", apikeys.edubase_password], cwd="02_Edubase")
         input("\nPress ENTER to return to the menu...")
 
     if choice == "03|Weather-Info":
@@ -48,6 +71,9 @@ while not exit_Button:
 
     if choice == "08|Quiz":
         subprocess.run(["python","main.py"], cwd="08_Quiz/Program")
+
+    if choice == "09|Sort Downloads Folder":
+        subprocess.run(["python","01_DownloadSorter.py"], cwd="09_DownloadSorting")
 
     if choice == "10|Exit":
         exit_Button = True
