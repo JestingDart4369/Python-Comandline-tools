@@ -10,7 +10,6 @@ sys.path.append(project_root)
 # Now import from /requirements
 from requirements import apikeys
 
-
 #Put Mail together
 print(f"{pyfiglet.figlet_format("Send Mail")}\n\n")
 target = input("To: ")

@@ -12,6 +12,7 @@ sys.path.append(project_root)
 
 # Now import from /requirements
 from requirements import apikeys
+
 api_key_geo = apikeys.api_key_geo
 api_key_weather = apikeys.api_key_weather
 #Settings
