@@ -2,17 +2,21 @@ import argparse
 from simple_chalk import chalk
 import requests
 import pyfiglet
-from apikey import *
-import time
+import sys
+import os
+
+# Go to the project root folder
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(project_root)
+
+# Now import from /requirements
+from requirements import apikeys
+api_key_geo = apikeys.api_key_geo
+api_key_weather = apikeys.api_key_weather
 from yaspin import yaspin
 #Settings
 Toggle_Comments = 0
 units = "metric"
-
-#Self configuration
-
-#api_key_geo = "xxxxx"
-#api_key_weather ="xxxxxx"
 
 #Spinner
 spinner = yaspin(text="Getting Weather Data",color="yellow")
