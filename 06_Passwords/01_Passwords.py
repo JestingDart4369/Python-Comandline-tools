@@ -2,8 +2,16 @@ import inquirer
 import pyfiglet
 from simple_chalk.src.utils import whenTruthy
 from cryptography.fernet import Fernet
-print(pyfiglet.figlet_format('Menu'))
+import os
+# Setup Checker
+current_directory = os.getcwd()
+if not os.path.exists(os.path.join(current_directory,"key.key")):
+    key = Fernet.generate_key()
+    with open("key.key", "wb") as key_file:
+        key_file.write(key)
 
+
+#Main Program
 def load_key():
     file = open("key.key", "rb")
     key_load = file.read()
@@ -28,7 +36,8 @@ def read():
             print(f"{fer.decrypt(user.encode()).decode()}|{fer.decrypt(pwd.encode()).decode()}\n")
     whenTruthy(input("Press enter to continue... "))
 while True:
-    choice = inquirer.list_input(message=f'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPasswords Options', choices=["01|Add Password", "02|View Passwords","03|Exit"])
+    print(pyfiglet.figlet_format("Password-\nManager"))
+    choice = inquirer.list_input(message=f'Password-Manager Menu', choices=["01|Add Password", "02|View Passwords","03|Exit"])
     if choice == "01|Add Password":
         add()
     if choice == "02|View Passwords":

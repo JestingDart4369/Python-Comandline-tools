@@ -63,7 +63,8 @@ def bankkontoauszug():
                f"Kontosumme| {current_konto_summ}\n")
 
 while True:
-    function_choice = inquirer.list_input(message="Finanzen Menu",
+    print(pyfiglet.figlet_format("Banking"))
+    function_choice = inquirer.list_input(message="Bank-Menu",
                                           choices=[
                                      "01|Bankkontoauszug",
                                      "10|Exit"])

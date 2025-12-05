@@ -9,4 +9,5 @@
 /07_Banking/tester.py
 /07_Banking/02_Bankauszüge/*
 /Testing/
-/requirements/apikeys.py
+/requirements/apikey.py
+/06_Passwords/key.key
