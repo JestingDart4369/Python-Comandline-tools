@@ -29,21 +29,19 @@ while not exit_Button:
 
     #Building Menu
     choice = inquirer.list_input(message=f'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n{pyfiglet.figlet_format('Menu')}\n\n', choices=[
-        "01|Setup",
+        "01|Sort Downloads Folder",
         "02|Edubase-Downloader",
         "03|Weather-Info",
         "04|Weather-Forcast",
         "05|Mailing",
         "06|Passwords",
         "07|Banking",
-        "08|Quiz",
-        "09|Sort Downloads Folder",
         "10|Exit"])
 
     #trigger For programs
-    if choice == "01|Setup":
-        open()
-        input("\nPress ENTER to return to the menu...")
+
+    if choice == "01|Sort Downloads Folder":
+        subprocess.run(["python","01_DownloadSorter.py"], cwd="00_DownloadSorting")
 
     if choice == "02|Edubase-Downloader":
         subprocess.run(["python","edubasedl.py","-u", apikeys.edubase_username, "-p", apikeys.edubase_password], cwd="02_Edubase")
@@ -68,12 +66,6 @@ while not exit_Button:
 
     if choice == "07|Banking":
         subprocess.run(["python","01_Banking.py"], cwd="07_Banking")
-
-    if choice == "08|Quiz":
-        subprocess.run(["python","main.py"], cwd="08_Quiz/Program")
-
-    if choice == "09|Sort Downloads Folder":
-        subprocess.run(["python","01_DownloadSorter.py"], cwd="09_DownloadSorting")
 
     if choice == "10|Exit":
         exit_Button = True
