@@ -52,6 +52,41 @@ def texting(message,repetitions,numbering,person):
                 message)
             enter()
         time.sleep(0.25)
+def texting_discord(message,repetitions,numbering,person):
+    time.sleep(3)
+    #select chat
+    mouse.position = (345/scale_factor,69/scale_factor)
+    time.sleep(0.5)
+    mouse.press(Button.left)
+    mouse.release(Button.left)
+    time.sleep(0.5)
+    mouse.position = (770 / scale_factor, 345 / scale_factor)
+    time.sleep(0.5)
+    mouse.press(Button.left)
+    mouse.release(Button.left)
+    keyboard.type(person)
+    time.sleep(1)
+    mouse.position = (707 / scale_factor, 462 / scale_factor)
+    mouse.press(Button.left)
+    mouse.release(Button.left)
+    time.sleep(0.5)
+    #writes messages in a selected chat
+    mouse.position = (866/scale_factor, 1055/scale_factor)
+    mouse.press(Button.left)
+    mouse.release(Button.left)
+    i = 0
+    while not i >= int(repetitions):
+        i = i + 1
+        if numbering == True:
+            keyboard.type(
+                message + " " + str(i))
+            enter()
+        else:
+            keyboard.type(
+                message)
+            enter()
+        time.sleep(0.25)
+
 
 #main loop of the program
 while True:
@@ -59,11 +94,16 @@ while True:
     choice = inquirer.list_input(message=f'Annoying-Tools-Menu',
                                  choices=[
                                      "01|Spamming Whatsapp",
+                                     "02|Spamming Discord",
                                      "10|Exit"])
     if choice == "01|Spamming Whatsapp":
         if scale_factor == 1.5:
             quest = question()
             texting(quest[0], quest[1], quest[2],quest[3])
+    if choice == "02|Spamming Discord":
+        if scale_factor == 1.5:
+            quest = question()
+            texting_discord(quest[0], quest[1], quest[2],quest[3])
         else:
             print("Wrong Resolution exiting program")
             exit()
