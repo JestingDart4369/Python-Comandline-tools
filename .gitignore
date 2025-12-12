@@ -11,3 +11,5 @@
 /Testing/
 /requirements/apikey.py
 /06_Passwords/key.key
+/00_DownloadSorting/cloudName
+/00_DownloadSorting/cloudDir.py

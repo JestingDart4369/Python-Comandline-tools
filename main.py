@@ -65,7 +65,7 @@ while True:
 
     if choice == "01|Sort Downloads Folder":
 
-        subprocess.run(["python","01_DownloadSorter.py"], cwd="00_DownloadSorting")
+        subprocess.run(["python","01_Main.py"], cwd="00_DownloadSorting")
 
     if choice == "02|Edubase-Downloader":
         subprocess.run(["python","edubasedl.py","-u", apikey.edubase_username, "-p", apikey.edubase_password], cwd="02_Edubase")
