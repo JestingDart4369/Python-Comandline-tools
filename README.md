@@ -44,6 +44,4 @@ This repository serves as a personal programming hub — a place to learn, autom
 
 📝 License
 
-This project is shared for educational and personal use.
-You are free to explore, learn from, and modify it for your own projects.
-go haywire
+This project is under the MIT licens
