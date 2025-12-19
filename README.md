@@ -1,6 +1,6 @@
-# 🧠 02_Programs
+# 🧠 Python-Commandline-Tools
 
-**02_Programs** is a collection of Python-based utility tools and learning projects.  
+**Python-Commandline-Tools** is a collection of Python-based utility tools and learning projects.  
 It serves as a **personal programming toolbox**, combining automation scripts, API experiments, and educational projects — all launched from a **single interactive command-line menu**.
 
 This repository focuses on learning, experimentation, and clean project structure rather than production-ready software.
@@ -114,15 +114,3 @@ Use Git features such as submodules, releases, and templates
 
 ### 📝 License
 This project is licensed under the MIT License.
-
-## ✅ What this README now does
-- Matches your **GitHub project maturity**
-- References SECURITY & CONTRIBUTING files
-- Explains submodules properly
-- Sets correct expectations (educational, not production)
-- Looks clean for **school, teachers, and GitHub profile**
-
-If you want next, I can:
-- shorten this for a **repo description**
-- prepare a **v1.0.0 release README snapshot**
-- review the repo one last time like a teacher would
