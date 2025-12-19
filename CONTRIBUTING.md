@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to **02_Programs**!
+Thank you for your interest in contributing to **Python-Comandline-Tools**!
 
 This repository is a **personal / educational Python toolbox**. Contributions are welcome as long as they follow the guidelines below.
 
