@@ -4,69 +4,120 @@
 
 Interactive CLI toolbox with 8 utility modules for daily tasks. Uses pyfiglet and inquirer for a menu-driven interface.
 
+**Architecture**: Client application that connects to centralized API Gateway for all external API access.
+
 ## Structure
 
 ```
 ├── main.py                     # Main menu launcher
 ├── setup_and_run.py            # Dependency installer + launcher
 ├── requirements/
-│   └── apikey.py               # API credentials (gitignored)
+│   ├── apikey.py               # Gateway credentials (gitignored)
+│   └── gateway.py              # Gateway client (JWT auth + API methods)
 ├── 00_DownloadSorting/         # Organize Downloads folder
-├── 02_Edubase/                 # Download books from Edubase (submodule)
+├── 02_Edubase/                 # Download books from Edubase (web scraping)
 ├── 03_weather/                 # Current weather lookup
-├── 04_Forcast/                 # 7-day weather forecast
-├── 05_Mailing/                 # Send emails via Resend API
+├── 04_Forcast/                 # Weather forecasts (hourly + daily)
+├── 05_Mailing/                 # Send emails via gateway
 ├── 06_Passwords/               # Encrypted password manager (Fernet)
 ├── 07_Banking/                 # Bank statement CSV analyzer
 └── 08_Annoying/                # Automation tool (WhatsApp/Discord)
 ```
 
-## APIs Used
+## API Gateway Integration
 
-| API | Used In | Purpose | Key Variable |
-|-----|---------|---------|--------------|
-| **OpenWeather** | 03_weather, 04_Forcast | Weather data | `api_key_weather` |
-| **Geoapify** | 03_weather, 04_Forcast | Geocoding | `api_key_geo` |
-| **Resend** | 05_Mailing | Email sending | `apikey_mail` |
-| **Edubase** | 02_Edubase | Book downloads (web scraping) | Username/password |
+All external APIs (OpenWeather, Geoapify, IPRegistry, Resend) are accessed through the centralized API Gateway at `https://api.novaroma-homelab.uk`.
 
-## Current API Implementation
+### Gateway Client (`requirements/gateway.py`)
 
-**Weather Module** (`03_weather/01_Weather.py:18-30`):
-- Direct calls to `api.openweathermap.org/data/2.5/weather`
-- Direct calls to `api.geoapify.com/v1/geocode/search`
+**Authentication**:
+- JWT Bearer token authentication
+- Automatic token refresh (tokens expire after 1 hour, refresh at 55 minutes)
+- Credentials stored in `requirements/apikey.py` (gitignored)
 
-**Forecast Module** (`04_Forcast/01_Forcast.py`):
-- Direct calls to `api.openweathermap.org/data/2.5/forecast/daily`
-- Direct calls to Geoapify geocoding
+**Available Methods**:
+- `get_weather(city, units)` - Current weather by city name
+- `get_hourly_forecast(lat, lon, units)` - 48-hour hourly forecast
+- `get_daily_forecast(lat, lon, days, units)` - Multi-day forecast
+- `geocode(city)` - Convert city name to coordinates
+- `get_location_from_ip(ip)` - Get location from IP address
+- `send_email(to, subject, html, from_email)` - Send emails via Resend
 
-**Mailing Module** (`05_Mailing/01_SendMail.py`):
-- Uses `resend` Python SDK
-- Sends emails via Resend API
+### Modules Using Gateway
 
-## Configuration
+| Module | Gateway Methods Used |
+|--------|---------------------|
+| `03_weather/01_Weather.py` | `geocode()`, `get_weather()` |
+| `04_Forcast/01_Forcast.py` | `geocode()`, `get_hourly_forecast()`, `get_daily_forecast()` |
+| `05_Mailing/01_SendMail.py` | `send_email()` |
 
-**API Keys** (`requirements/apikey.py`):
+## Configuration & Security
+
+### Credentials File (`requirements/apikey.py`)
+
+**CRITICAL: This file is gitignored and contains sensitive data!**
+
 ```python
-apikey_mail = "..."           # Resend API key
-api_key_geo = "..."           # Geoapify key
-api_key_weather = "..."       # OpenWeather key
+# API Gateway Configuration (centralized API access)
+GATEWAY_URL = "https://api.novaroma-homelab.uk"
+GATEWAY_USERNAME = "..."
+GATEWAY_PASSWORD = "..."
+
+# Email configuration (for gateway send_email calls)
+email = "Cmd@api.novaroma-homelab.uk"
+
+# Non-API credentials (web scraping, local services)
 edubase_username = "..."
 edubase_password = "..."
 ```
 
-## Migration to API Gateway
+### Protected Files (.gitignore)
 
-**Target**: Use centralized API gateway at `https://api.novaroma-homelab.uk` instead of direct API calls.
+**Never commit these files:**
+- `/requirements/apikey.py` - Gateway credentials
+- `/03_weather/apikey.py` - Legacy (if exists)
+- `/04_Forcast/apikey.py` - Legacy (if exists)
+- `/05_Mailing/apikey.py` - Legacy (if exists)
+- `/06_Passwords/02_Password_collection` - Encrypted password vault
+- `/06_Passwords/key.key` - Fernet encryption key
+- `/07_Banking/02_Bankauszüge/*` - Bank statements
 
-**Benefits**:
-- Centralized API key management
-- Authentication via JWT tokens
-- No API keys exposed in client code
-- Usage tracking and rate limiting
+## Security Benefits of Gateway
 
-**Required Changes**:
-1. Add gateway authentication (JWT tokens)
-2. Replace direct API calls with gateway endpoints
-3. Update geocoding and weather modules
-4. Add email proxy endpoint to gateway
+1. **No API Keys in Client Code**: All external API keys stored server-side only
+2. **Centralized Authentication**: Single username/password for all services
+3. **Token-Based Security**: JWT tokens with automatic refresh and expiration
+4. **Credential Isolation**: Only gateway credentials in client code, external API keys never exposed
+
+## Local Development
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run main menu
+python main.py
+
+# Or use setup script (installs deps + runs)
+python setup_and_run.py
+```
+
+## Testing
+
+Test gateway connectivity:
+```bash
+python -c "from requirements.gateway import GatewayClient; from requirements import apikey; g = GatewayClient(apikey.GATEWAY_URL, apikey.GATEWAY_USERNAME, apikey.GATEWAY_PASSWORD); print(g.get_weather('London'))"
+```
+
+## Common Tasks
+
+### Add New Gateway-Backed Feature
+1. Check if endpoint exists in gateway (`/docs` or `index.html`)
+2. If not, request new endpoint in API Gateway project
+3. Add method to `requirements/gateway.py`
+4. Use in your module: `gateway.new_method(...)`
+
+### Update Gateway Credentials
+1. Edit `requirements/apikey.py`
+2. Update `GATEWAY_USERNAME` or `GATEWAY_PASSWORD`
+3. Do NOT commit this file!

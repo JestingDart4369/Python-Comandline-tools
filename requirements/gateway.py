@@ -75,3 +75,19 @@ class GatewayClient:
     def get_hourly_forecast(self, lat: float, lon: float, units: str = "metric") -> Dict[Any, Any]:
         """Get hourly weather forecast."""
         return self.get(f"/forecast/hourly", params={"lat": lat, "lon": lon, "units": units})
+
+    def get_location_from_ip(self, ip: Optional[str] = None) -> Dict[Any, Any]:
+        """Get location information from IP address."""
+        params = {"ip": ip} if ip else {}
+        return self.get(f"/ipregistry/location", params=params)
+
+    def send_email(self, to: list, subject: str, html: str, from_email: Optional[str] = None) -> Dict[Any, Any]:
+        """Send an email via Resend API."""
+        payload = {
+            "to": to if isinstance(to, list) else [to],
+            "subject": subject,
+            "html": html
+        }
+        if from_email:
+            payload["from_email"] = from_email
+        return self.post(f"/email/send", json=payload)

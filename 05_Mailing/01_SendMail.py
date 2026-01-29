@@ -1,5 +1,4 @@
 import pyfiglet
-import resend
 import sys
 import os
 
@@ -9,19 +8,31 @@ sys.path.append(project_root)
 
 # Now import from /requirements
 from requirements import apikey
+from requirements.gateway import GatewayClient
+
+# Initialize gateway client
+gateway = GatewayClient(
+    base_url=apikey.GATEWAY_URL,
+    username=apikey.GATEWAY_USERNAME,
+    password=apikey.GATEWAY_PASSWORD
+)
 
 #Put Mail together
 print(pyfiglet.figlet_format("Mailing"))
 target = input("To\n")
 subject = input("Subject\n")
 message = input("Message\n")
-resend.api_key = apikey.apikey_mail
-params: resend.Emails.SendParams = {
-  "from": f"Comandline <{apikey.email}>",
-  "to": [target],
-  "subject": subject,
-  "html": f"<p>{message}</p>"
-}
 
-email = resend.Emails.send(params)
-print(F"Email sent to {target}")
+# Send email via gateway
+try:
+    result = gateway.send_email(
+        to=[target],
+        subject=subject,
+        html=f"<p>{message}</p>",
+        from_email=apikey.email
+    )
+    print(f"Email sent to {target}")
+    if result.get("email_id"):
+        print(f"Email ID: {result['email_id']}")
+except Exception as e:
+    print(f"Error sending email: {e}")
