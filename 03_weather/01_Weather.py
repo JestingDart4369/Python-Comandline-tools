@@ -11,10 +11,15 @@ sys.path.append(project_root)
 
 # Now import from /requirements
 from requirements import apikey
-
-api_key_geo = apikey.api_key_geo
-api_key_weather = apikey.api_key_weather
+from requirements.gateway import GatewayClient
 from yaspin import yaspin
+
+# Initialize gateway client
+gateway = GatewayClient(
+    base_url=apikey.GATEWAY_URL,
+    username=apikey.GATEWAY_USERNAME,
+    password=apikey.GATEWAY_PASSWORD
+)
 #Settings
 Toggle_Comments = 0
 units = "metric"
@@ -51,49 +56,28 @@ Weather_icons_lib = {
 
 }
 
-#construct Geolocation api call
-if Toggle_Comments == 1 :
-    print("Constructing Geolocation Api Call")
-url_geo = f"https://api.geoapify.com/v1/geocode/search?text={Location}&apiKey={api_key_geo}"
-headers = {
-    "accept": "application/json",
-    "accept-encoding": "deflate, gzip, br"
-}
-
-#makeing geo Api Call
-if Toggle_Comments == 1 :
-    print("Sending Geolocation Api Call")
-response_geo = requests.get(url_geo, headers=headers)
-if response_geo.status_code != 200:
-    spinner.fail(chalk.red("Error: Unable to retrieve Coordinates information"))
+#Making Geocoding API call via gateway
+if Toggle_Comments == 1:
+    print("Sending Geocoding API call via gateway")
+try:
+    data_geo = gateway.geocode(Location)
+    longitude = data_geo["features"][0]["properties"]["lon"]
+    latitude = data_geo["features"][0]["properties"]["lat"]
+    if Toggle_Comments == 1:
+        print(longitude, latitude)
+except Exception as e:
+    spinner.fail(chalk.red(f"Error: Unable to retrieve coordinates: {e}"))
     exit()
 
-#Converting longitude and latitude
-data_geo = response_geo.json()
-longitude = data_geo["features"][0]["properties"]["lon"]
-latitude = data_geo["features"][0]["properties"]["lat"]
-if Toggle_Comments == 1 :
-    print(longitude,latitude)
-
-#Constructing whether api call
-if Toggle_Comments == 1 :
-    print("Constructing weather api call")
-url_weather= f"{default_url_weather}/data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key_weather}&units={units}"
-headers = {
-    "accept": "application/json",
-    "accept-encoding": "deflate, gzip, br"
-}
-#Making Weather api call
-if Toggle_Comments == 1 :
-    print("Sending weather api call")
-response_weather = requests.get(url_weather, headers=headers)
-if response_weather.status_code != 200:
-    print(chalk.red("Error: Unable to retrieve weather information"))
+#Making Weather API call via gateway
+if Toggle_Comments == 1:
+    print("Sending weather API call via gateway")
+try:
+    # Use the gateway's convenience method for weather
+    data_weather = gateway.get_weather(Location, units=units)
+except Exception as e:
+    spinner.fail(chalk.red(f"Error: Unable to retrieve weather information: {e}"))
     exit()
-
-
-#parsing to json
-data_weather = response_weather.json()
 
 
 #Converting to output

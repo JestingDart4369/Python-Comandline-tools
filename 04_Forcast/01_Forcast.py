@@ -13,9 +13,14 @@ sys.path.append(project_root)
 
 # Now import from /requirements
 from requirements import apikey
+from requirements.gateway import GatewayClient
 
-api_key_geo = apikey.api_key_geo
-api_key_weather = apikey.api_key_weather
+# Initialize gateway client
+gateway = GatewayClient(
+    base_url=apikey.GATEWAY_URL,
+    username=apikey.GATEWAY_USERNAME,
+    password=apikey.GATEWAY_PASSWORD
+)
 #Settings
 Toggle_Comments = 0
 units = "metric"
@@ -56,46 +61,22 @@ weather_icons_lib = {
 }
 
 
-#Geoplocation
-
-#Constructing Api Call
-url_geo = f"https://api.geoapify.com/v1/geocode/search?text={Location}&apiKey={api_key_geo}"
-headers = {
-    "accept": "application/json",
-    "accept-encoding": "deflate, gzip, br"
-}
-
-#Calling Geo Api
-response_geo = requests.get(url_geo, headers=headers)
-if response_geo.status_code != 200:
-    print(chalk.red("Error: Unable to retrieve Coordinates information"))
+#Geoplocation via gateway
+try:
+    data_geo = gateway.geocode(Location)
+    longitude = data_geo["features"][0]["properties"]["lon"]
+    latitude = data_geo["features"][0]["properties"]["lat"]
+except Exception as e:
+    spinner.fail(chalk.red(f"Error: Unable to retrieve coordinates: {e}"))
     exit()
 
 
-#Converting longitude and latitude
-data_geo = response_geo.json()
-longitude = data_geo["features"][0]["properties"]["lon"]
-latitude = data_geo["features"][0]["properties"]["lat"]
-
-
-#Weather
-
-#Constructing Api Call
-url_weather= f"{default_url_weather}/data/2.5/forecast/daily?lat={latitude}&lon={longitude}&cnd={days}&appid={api_key_weather}&units={units}"
-headers = {
-    "accept": "application/json",
-    "accept-encoding": "deflate, gzip, br"
-}
-
-#Calling Weather Api
-response_weather = requests.get(url_weather, headers=headers)
-if response_weather.status_code != 200:
-    print(chalk.red("Error: Unable to retrieve weather information"))
+#Weather forecast via gateway
+try:
+    data_weather = gateway.get_daily_forecast(latitude, longitude, days=days, units=units)
+except Exception as e:
+    spinner.fail(chalk.red(f"Error: Unable to retrieve weather forecast: {e}"))
     exit()
-
-
-#parsing to json
-data_weather = response_weather.json()
 
 
 #Building Output

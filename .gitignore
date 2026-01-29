@@ -1,15 +1,45 @@
+# API keys and credentials (CRITICAL - DO NOT COMMIT)
+/requirements/apikey.py
 /03_weather/apikey.py
-/03_weather/.idea/
 /04_Forcast/apikey.py
 /05_Mailing/apikey.py
+
+# Password manager files
 /06_Passwords/02_Password_collection
 /06_Passwords/key.key
-/Edubase_Login.py
-/Testing.py
-/07_Banking/tester.py
+
+# Banking data (sensitive)
 /07_Banking/02_Bankauszüge/*
-/Testing/
-/requirements/apikey.py
-/06_Passwords/key.key
+/07_Banking/tester.py
+
+# Cloud directory configuration
 /00_DownloadSorting/cloudName
 /00_DownloadSorting/cloudDir.py
+
+# Testing files
+/Testing/
+/Testing.py
+/Edubase_Login.py
+
+# IDE
+/03_weather/.idea/
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

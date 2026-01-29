@@ -4,22 +4,17 @@ import inquirer
 import pyfiglet
 kontoauszug_file = ""
 os.makedirs("./02_Bankauszüge", exist_ok=True)
-def kontoauszug_laden():
-    #Loads a Kontoauszug
-    #Cantonal Bank Csv
-        #0|buchung
-        #1|valuta
-        #2|Buchungstext
-        #3|belastung
-        #4|Gutschrift
-        #5|saldo
-    base_dir = "./02_Bankauszüge"
-    kontoauszug = inquirer.list_input(
-        "Bitte wählen Sie ein Kontoauszug aus:",
-        choices=os.listdir(base_dir))
-    global kontoauszug_file
-    kontoauszug_file = f"{base_dir}/{kontoauszug}"
+def neuester_kontoauszug(base_dir="./02_Bankauszüge"):
+    csv_files = [
+        os.path.join(base_dir, f)
+        for f in os.listdir(base_dir)
+        if f.lower().endswith(".csv")
+    ]
 
+    if not csv_files:
+        raise FileNotFoundError("Keine CSV-Dateien gefunden!")
+
+    return max(csv_files, key=os.path.getmtime)
 def kontoauszug_money_spent():
     #calculates all money spent
     cost = 0.0
@@ -33,7 +28,6 @@ def kontoauszug_money_spent():
             except ValueError:
                 cost += float(0)
     return cost
-
 def kontoauszug_money_received():
     #calculates all money Received to bank conto
     received = 0.0
@@ -48,7 +42,8 @@ def kontoauszug_money_received():
                 received += float(0)
     return received
 def bankkontoauszug():
-    kontoauszug_laden()
+    global kontoauszug_file
+    kontoauszug_file = neuester_kontoauszug()
     spent_money = kontoauszug_money_spent()
     received = kontoauszug_money_received()
     current_konto_summ = received - spent_money
