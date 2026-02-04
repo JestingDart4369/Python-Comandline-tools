@@ -42,6 +42,12 @@ All external APIs (OpenWeather, Geoapify, IPRegistry, Resend) are accessed throu
 - `geocode(city)` - Convert city name to coordinates
 - `get_location_from_ip(ip)` - Get location from IP address
 - `send_email(to, subject, html, from_email)` - Send emails via Resend
+- `list_software()` - List all registered software with health
+- `get_software(name)` - Health for one software (includes `stale` flag)
+- `push_software_heartbeat(name, health, details)` - Push heartbeat (`health`: ok/warning/error)
+- `list_hardware()` - List all registered hardware with health + config
+- `get_hardware(name)` - Health + config for one device (includes `stale` flag)
+- `push_hardware_heartbeat(name, health, config, details)` - Push heartbeat with optional config
 
 ### Modules Using Gateway
 
