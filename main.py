@@ -32,21 +32,36 @@ if not os.path.exists(os.path.join(current_directory,"requirements","apikey.py")
     api_key_weather = input("Enter Weather API Key: from OpenWeatherMap: ")
     edubase_username = input("Enter Edubase Username: ")
     edubase_password = input("Enter Edubase Password: ")
+    gateway_username = input("Enter API Gateway Username: ")
+    gateway_password = input("Enter API Gateway Password: ")
     requ = (f"apikey_mail = '{apikey_mail}'\n"
             f"email= '{email}'\n"
             f"api_key_geo = '{api_key_geo}'\n"
             f"api_key_weather = '{api_key_weather}'\n"
             f"edubase_username = '{edubase_username}'\n"
-            f"edubase_password = '{edubase_password}'")
+            f"edubase_password = '{edubase_password}'\n"
+            f"GATEWAY_USERNAME = '{gateway_username}'\n"
+            f"GATEWAY_PASSWORD = '{gateway_password}'")
     with open(os.path.join(current_directory,"requirements","apikey.py"),"x") as i:
         i.write(requ)
 from requirements import apikey
+from requirements.heartbeat import Heartbeat
 import pyfiglet
 import inquirer
+
+# ── kill-switch heartbeat ───────────────────────────────────────────
+# Disable "python-cli-tools" in /settings/software on the gateway to
+# shut this CLI down remotely.
+_heartbeat = Heartbeat("python-cli-tools", apikey.GATEWAY_USERNAME, apikey.GATEWAY_PASSWORD)
+_heartbeat.start()
 
 
 #Program
 while True:
+
+    if _heartbeat.killed.is_set():
+        print("Shutting down — disabled on gateway.")
+        exit()
 
     #Building Menu
     print(pyfiglet.figlet_format("Main-Menu"))
