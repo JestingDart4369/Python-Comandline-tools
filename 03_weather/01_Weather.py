@@ -10,15 +10,15 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(project_root)
 
 # Now import from /requirements
-from requirements import apikey
+from requirements import config
 from requirements.gateway import GatewayClient
 from yaspin import yaspin
 
 # Initialize gateway client
 gateway = GatewayClient(
-    base_url=apikey.GATEWAY_URL,
-    username=apikey.GATEWAY_USERNAME,
-    password=apikey.GATEWAY_PASSWORD
+    base_url=config.GATEWAY_URL,
+    username=config.GATEWAY_USERNAME,
+    password=config.GATEWAY_PASSWORD
 )
 #Settings
 Toggle_Comments = 0

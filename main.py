@@ -23,28 +23,24 @@ else:
     print("No requirements.txt found — skipping package installation.\n")
     quit()
 
-#Checker api keys
-if not os.path.exists(os.path.join(current_directory,"requirements","apikey.py")):
-    print("ApiKeys Missing")
-    apikey_mail = input("Enter Mail Bearer token from Resend: ")
-    email = input("Enter Email Address to send Mail from Resend: ")
-    api_key_geo = input("Enter Geolocation API Key from Geoapify: ")
-    api_key_weather = input("Enter Weather API Key: from OpenWeatherMap: ")
-    edubase_username = input("Enter Edubase Username: ")
-    edubase_password = input("Enter Edubase Password: ")
-    gateway_username = input("Enter API Gateway Username: ")
-    gateway_password = input("Enter API Gateway Password: ")
-    requ = (f"apikey_mail = '{apikey_mail}'\n"
-            f"email= '{email}'\n"
-            f"api_key_geo = '{api_key_geo}'\n"
-            f"api_key_weather = '{api_key_weather}'\n"
-            f"edubase_username = '{edubase_username}'\n"
-            f"edubase_password = '{edubase_password}'\n"
-            f"GATEWAY_USERNAME = '{gateway_username}'\n"
-            f"GATEWAY_PASSWORD = '{gateway_password}'")
-    with open(os.path.join(current_directory,"requirements","apikey.py"),"x") as i:
-        i.write(requ)
-from requirements import apikey
+#Checker config
+if not os.path.exists(os.path.join(current_directory,"requirements","config.py")):
+    print("Configuration missing — fill in your details:")
+    gateway_username = input("  Gateway username: ")
+    gateway_password = input("  Gateway password: ")
+    email_from       = input("  Email sender address: ")
+    edubase_username = input("  Edubase username: ")
+    edubase_password = input("  Edubase password: ")
+    requ = (f'GATEWAY_URL      = "https://api.novaroma-homelab.uk"\n'
+            f'GATEWAY_USERNAME = "{gateway_username}"\n'
+            f'GATEWAY_PASSWORD = "{gateway_password}"\n'
+            f'EMAIL_FROM       = "{email_from}"\n'
+            f'EDUBASE_USERNAME = "{edubase_username}"\n'
+            f'EDUBASE_PASSWORD = "{edubase_password}"\n')
+    with open(os.path.join(current_directory,"requirements","config.py"),"x") as f:
+        f.write(requ)
+from requirements import config
+from requirements.gateway import GatewayClient
 from requirements.heartbeat import Heartbeat
 import pyfiglet
 import inquirer
@@ -52,7 +48,8 @@ import inquirer
 # ── kill-switch heartbeat ───────────────────────────────────────────
 # Disable "python-cli-tools" in /settings/software on the gateway to
 # shut this CLI down remotely.
-_heartbeat = Heartbeat("python-cli-tools", apikey.GATEWAY_USERNAME, apikey.GATEWAY_PASSWORD)
+_gw = GatewayClient(config.GATEWAY_URL, config.GATEWAY_USERNAME, config.GATEWAY_PASSWORD)
+_heartbeat = Heartbeat(_gw, kind="software", name="python-cli-tools")
 _heartbeat.start()
 
 
@@ -83,7 +80,7 @@ while True:
         subprocess.run(["python","01_Main.py"], cwd="00_DownloadSorting")
 
     if choice == "02|Edubase-Downloader":
-        subprocess.run(["python","edubasedl.py","-u", apikey.edubase_username, "-p", apikey.edubase_password], cwd="02_Edubase")
+        subprocess.run(["python","edubasedl.py","-u", config.EDUBASE_USERNAME, "-p", config.EDUBASE_PASSWORD], cwd="02_Edubase")
         input("Press ENTER to return to the menu...")
 
     if choice == "03|Weather-Info":
